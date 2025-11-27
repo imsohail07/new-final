@@ -1,0 +1,52 @@
+name: NewsHub Fullstack CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  frontend:
+    name: Build React Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: |
+          cd news-aggregator-frontend
+          npm install
+
+      - name: Build Frontend
+        run: |
+          cd news-aggregator-frontend
+          npm run build
+
+
+  backend:
+    name: Build Spring Boot Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Build Backend with Maven
+        run: |
+          cd news-aggregator-backend
+          mvn -B clean package -DskipTests
