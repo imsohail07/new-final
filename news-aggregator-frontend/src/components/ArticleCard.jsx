@@ -55,11 +55,22 @@ export default function ArticleCard({ article, onSave }) {
         </a>
 
         <button
-          onClick={onSave}
-          className="px-3 py-1 rounded-full bg-amber-500/80 hover:bg-amber-400 text-black font-medium"
-        >
-          Save
-        </button>
+  onClick={async () => {
+    try {
+      // prefer parent-provided onSave handler (Dashboard passes this), fallback to no-op
+      if (onSave) await onSave(article);
+      // optionally set local state so button turns yellow
+      // setSaved(true);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to save article");
+    }
+  }}
+  className="px-4 py-2 rounded-full bg-yellow-500 text-black font-medium hover:bg-yellow-400"
+>
+  Save
+</button>
+
       </div>
     </article>
   );

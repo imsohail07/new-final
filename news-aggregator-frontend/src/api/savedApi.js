@@ -13,13 +13,23 @@ export async function getSavedArticles() {
   }
 }
 
-// ✅ SAVE an article
+// ✅ SAVE an article (✅ WITH PROPER FIELD MAPPING)
 export async function saveArticle(article) {
   try {
-    const res = await axios.post(API_BASE_URL, article);
+    const payload = {
+      title: article.title,
+      description: article.description,
+      url: article.url,
+      source: article.source?.name || "Unknown",
+      imageUrl: article.urlToImage,
+      publishedAt: article.publishedAt,
+      userEmail: "demo@user.com", // later replace with logged-in user
+    };
+
+    const res = await axios.post(API_BASE_URL, payload);
     return res.data;
   } catch (err) {
-    console.error("Error saving article:", err);
+    console.error("❌ Error saving article:", err);
     throw err;
   }
 }
@@ -30,7 +40,7 @@ export async function removeSavedArticle(id) {
     const res = await axios.delete(`${API_BASE_URL}/${id}`);
     return res.data;
   } catch (err) {
-    console.error("Error removing saved article:", err);
+    console.error("❌ Error removing saved article:", err);
     throw err;
   }
 }

@@ -1,0 +1,16 @@
+services:
+  backend:
+    image: cicd-project-backend
+    container_name: newshub-backend
+    ports:
+      - "9091:8095"
+    restart: always
+
+  frontend:
+    image: cicd-project-frontend
+    container_name: newshub-frontend
+    ports:
+      - "9090:80"
+    depends_on:
+      - backend
+    restart: always
