@@ -20,13 +20,16 @@ public class NewsController {
 
     @GetMapping("/top")
     public Object getTopNews(
-            @RequestParam(defaultValue = "general") String category) {
-        return newsService.getTopHeadlines(category);
+            @RequestParam(defaultValue = "general") String category,
+            @RequestParam(defaultValue = "1") int page) {
+        return newsService.getTopHeadlines(category, page);
     }
 
     @GetMapping("/search")
-    public Object search(@RequestParam String q) {
-        return newsService.searchNews(q);
+    public Object search(
+            @RequestParam String q,
+            @RequestParam(defaultValue = "1") int page) {
+        return newsService.searchNews(q, page);
     }
 }
  

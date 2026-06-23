@@ -85,6 +85,11 @@ public class AuthService {
             throw new RuntimeException("User already exists");
         }
 
+        Optional<User> existingUsername = userRepository.findByUsername(request.getUsername());
+        if (existingUsername.isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());

@@ -102,7 +102,7 @@ export default function Navbar() {
           <img 
             src="/images/meridian-logo.png" 
             alt="The Meridian Times" 
-            className="site-logo filter invert transition duration-300 group-hover:opacity-85"
+            className="site-logo transition duration-300 group-hover:opacity-85"
           />
         </Link>
       </div>

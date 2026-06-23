@@ -30,7 +30,8 @@ export default function Login() {
       login(token);
       navigate("/dashboard");
     } catch (err) {
-      alert(err.response?.data || "Login failed. Please check your credentials.");
+      const errMsg = typeof err.response?.data === "string" ? err.response.data : (err.response?.data?.message || "Login failed. Please check your credentials.");
+      alert(errMsg);
       console.error(err);
     } finally {
       setLoginLoading(false);
@@ -52,7 +53,8 @@ export default function Login() {
       alert("A reset OTP has been sent to your email.");
       setView("reset");
     } catch (err) {
-      alert(err.response?.data || "Failed to initiate password reset. Ensure the email is registered.");
+      const errMsg = typeof err.response?.data === "string" ? err.response.data : (err.response?.data?.message || "Failed to initiate password reset. Ensure the email is registered.");
+      alert(errMsg);
     } finally {
       setForgotLoading(false);
     }
@@ -80,7 +82,8 @@ export default function Login() {
       setResetOtp("");
       setNewPassword("");
     } catch (err) {
-      alert(err.response?.data || "Failed to reset password. Please check your OTP.");
+      const errMsg = typeof err.response?.data === "string" ? err.response.data : (err.response?.data?.message || "Failed to reset password. Please check your OTP.");
+      alert(errMsg);
     } finally {
       setResetLoading(false);
     }

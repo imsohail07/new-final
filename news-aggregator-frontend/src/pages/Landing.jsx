@@ -36,26 +36,25 @@ export default function Landing() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white overflow-hidden relative">
       {/* Decorative gradient overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(124,58,237,0.08),transparent_55%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(170,142,93,0.12),transparent_60%)] pointer-events-none" />
 
       {step === "zoom" && (
-        <div className="text-center animate-fade-in-zoom">
-          <h1 className="text-6xl md:text-8xl font-black tracking-widest bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-400 bg-clip-text text-transparent filter drop-shadow-2xl">
-            NewsHub
-          </h1>
-          <p className="text-xs text-gray-500 tracking-[0.6em] uppercase mt-4 font-semibold">
-            SYSTEMIZED NEWS
-          </p>
+        <div className="text-center animate-fade-in-zoom px-6">
+          <img 
+            src="/images/meridian-logo.png" 
+            alt="The Meridian Times" 
+            className="w-[450px] md:w-[600px] max-w-full object-contain filter drop-shadow-[0_0_35px_rgba(170,142,93,0.15)] mx-auto"
+          />
         </div>
       )}
 
       {step === "greet" && (
-        <div className="text-center animate-fade-in space-y-4">
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight text-white">
+        <div className="text-center animate-fade-in space-y-4 font-cinzel">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-wider text-white">
             {greeting}
           </h2>
-          <p className="text-sm text-purple-400 tracking-wider font-semibold uppercase animate-pulse">
-            Opening Dashboard...
+          <p className="text-xs text-purple-400 tracking-[0.3em] font-semibold uppercase animate-pulse">
+            NEWS THAT DEFINES OUR WORLD
           </p>
         </div>
       )}

@@ -5,6 +5,7 @@ import Loader from "../components/Loader";
 import ArticleCard from "../components/ArticleCard";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function Dashboard() {
   const [articles, setArticles] = useState([]);
@@ -12,27 +13,83 @@ export default function Dashboard() {
   const [query, setQuery] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
 
+  // Pagination and Infinite Scroll state
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [mode, setMode] = useState("top"); // "top" or "search"
+
   const [searchParams] = useSearchParams();
   const activeCategory = searchParams.get("category") || "general";
 
   useEffect(() => {
-    loadTopNews(activeCategory);
+    loadTopNews(activeCategory, 1, false);
     setQuery("");
   }, [activeCategory]);
 
-  const loadTopNews = async (category = "general") => {
-    setLoading(true);
-    const data = await getTopNews(category);
-    setArticles(data?.articles || []);
-    setLoading(false);
+  const loadTopNews = async (category = "general", pageNum = 1, isAppend = false) => {
+    if (pageNum === 1) {
+      setLoading(true);
+    }
+    setMode("top");
+
+    const data = await getTopNews(category, pageNum);
+    const newArticles = data?.articles || [];
+
+    if (isAppend) {
+      setArticles((prev) => [...prev, ...newArticles]);
+    } else {
+      setArticles(newArticles);
+    }
+
+    const total = data?.totalResults || 0;
+    const currentLength = isAppend ? articles.length + newArticles.length : newArticles.length;
+
+    if (newArticles.length === 0 || currentLength >= total) {
+      setHasMore(false);
+    } else {
+      setHasMore(true);
+    }
+
+    setPage(pageNum);
+    if (pageNum === 1) setLoading(false);
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (pageNum = 1, isAppend = false) => {
     if (!query.trim()) return;
-    setLoading(true);
-    const data = await searchNews(query);
-    setArticles(data?.articles || []);
-    setLoading(false);
+    if (pageNum === 1) {
+      setLoading(true);
+    }
+    setMode("search");
+
+    const data = await searchNews(query, pageNum);
+    const newArticles = data?.articles || [];
+
+    if (isAppend) {
+      setArticles((prev) => [...prev, ...newArticles]);
+    } else {
+      setArticles(newArticles);
+    }
+
+    const total = data?.totalResults || 0;
+    const currentLength = isAppend ? articles.length + newArticles.length : newArticles.length;
+
+    if (newArticles.length === 0 || currentLength >= total) {
+      setHasMore(false);
+    } else {
+      setHasMore(true);
+    }
+
+    setPage(pageNum);
+    if (pageNum === 1) setLoading(false);
+  };
+
+  const fetchMoreData = () => {
+    const nextPage = page + 1;
+    if (mode === "top") {
+      loadTopNews(activeCategory, nextPage, true);
+    } else {
+      handleSearch(nextPage, true);
+    }
   };
 
   const handleSave = async (article) => {
@@ -104,16 +161,36 @@ export default function Dashboard() {
         )}
 
         {/* Articles grid */}
-        {!loading && (
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {articles.map((article, i) => (
-              <ArticleCard
-                key={i}
-                article={article}
-                onSave={() => handleSave(article)}
-              />
-            ))}
-          </div>
+        {!loading && articles.length > 0 && (
+          <InfiniteScroll
+            dataLength={articles.length}
+            next={fetchMoreData}
+            hasMore={hasMore}
+            loader={
+              <div className="flex justify-center my-8">
+                <p className="text-xs text-purple-400 tracking-[0.2em] font-semibold uppercase animate-pulse font-cinzel">
+                  Contacting...
+                </p>
+              </div>
+            }
+            endMessage={
+              <div className="flex justify-center my-8">
+                <p className="text-xs text-purple-400/60 tracking-[0.2em] font-semibold uppercase animate-pulse font-cinzel">
+                  Contacting...
+                </p>
+              </div>
+            }
+          >
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {articles.map((article, i) => (
+                <ArticleCard
+                  key={i}
+                  article={article}
+                  onSave={() => handleSave(article)}
+                />
+              ))}
+            </div>
+          </InfiniteScroll>
         )}
 
         {!loading && articles.length === 0 && (

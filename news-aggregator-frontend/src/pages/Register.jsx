@@ -33,7 +33,8 @@ export default function Register() {
       setOtpSent(true);
       alert("A 6-digit verification code has been sent to your email.");
     } catch (err) {
-      alert(err.response?.data || "Failed to send verification code. User might already exist.");
+      const errMsg = typeof err.response?.data === "string" ? err.response.data : (err.response?.data?.message || "Failed to send verification code. User might already exist.");
+      alert(errMsg);
     } finally {
       setOtpLoading(false);
     }
@@ -57,7 +58,8 @@ export default function Register() {
       alert("Registration successful! Please login.");
       navigate("/login");
     } catch (err) {
-      alert(err.response?.data || "Registration failed. Please check your credentials or OTP.");
+      const errMsg = typeof err.response?.data === "string" ? err.response.data : (err.response?.data?.message || "Registration failed. Please check your credentials or OTP.");
+      alert(errMsg);
     }
   };
 

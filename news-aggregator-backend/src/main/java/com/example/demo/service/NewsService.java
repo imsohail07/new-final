@@ -15,16 +15,16 @@ public class NewsService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public Object getTopHeadlines(String category) {
+    public Object getTopHeadlines(String category, int page) {
         String url = "https://newsapi.org/v2/top-headlines?country=" + defaultCountry + "&category="
-                + category + "&apiKey=" + apiKey;
+                + category + "&apiKey=" + apiKey + "&page=" + page;
 
         return restTemplate.getForObject(url, Object.class);
     }
 
-    public Object searchNews(String keyword) {
+    public Object searchNews(String keyword, int page) {
         String url = "https://newsapi.org/v2/everything?q="
-                + keyword + "&apiKey=" + apiKey;
+                + keyword + "&apiKey=" + apiKey + "&page=" + page;
 
         return restTemplate.getForObject(url, Object.class);
     }

@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -8,9 +8,12 @@ import Navbar from "./components/Navbar";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
 export default function App() {
+  const location = useLocation();
+  const showNavbar = location.pathname !== "/";
+
   return (
     <>
-      <Navbar />
+      {showNavbar && <Navbar />}
 
       <Routes>
         <Route path="/" element={<Landing />} />
